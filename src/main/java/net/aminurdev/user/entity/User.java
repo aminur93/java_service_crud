@@ -1,6 +1,8 @@
 package net.aminurdev.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,18 +18,22 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 public class User {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 50)
-    private String Name;
+    @NotNull(message = "Name field is required")
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
 
+    @Email(message = "Invalid email format")
     @Column(name = "email", nullable = false, unique = true, length = 50)
-    private String Email;
+    private String email;
 
+    @NotNull(message = "Phone field is required")
     @Column(name = "phone", nullable=false, unique = true, length = 11)
-    private String Phone;
+    private String phone;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -38,7 +44,7 @@ public class User {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = createdAt; // Set updatedAt to createdAt on entity creation
+        updatedAt = createdAt;
     }
 
     @PreUpdate

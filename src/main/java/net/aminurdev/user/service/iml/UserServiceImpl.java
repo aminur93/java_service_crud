@@ -6,6 +6,8 @@ import net.aminurdev.user.entity.User;
 import net.aminurdev.user.exception.ResourceNotFoundException;
 import net.aminurdev.user.repository.UserRepository;
 import net.aminurdev.user.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,26 +19,16 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> index() {
+    public Page<User> index(Pageable pageable) {
 
-        List<User> users;
-        users = userRepository.findAll();
-
-        return users;
+        return userRepository.findAll(pageable);
     }
 
     @Override
     public User store(User user) {
 
-        try{
+       return userRepository.save(user);
 
-           return userRepository.save(user);
-
-        }catch (Exception e) {
-
-            throw new RuntimeException(e.getLocalizedMessage());
-
-        }
     }
 
     @Override
@@ -51,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional // Add transactional annotation to ensure atomicity
+    @Transactional
     public User update(Long userId, User user) {
         try {
             // Retrieve the user by userId or throw an exception if not found
